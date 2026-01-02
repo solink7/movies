@@ -1,7 +1,11 @@
 import { getTrendingMovies, updateSearchCount } from './appwrite.js'
 import MovieCard from './components/MovieCard';
+import MovieDetailModal from './components/MovieDetailModal';
 import Search from './components/Search'
 import Spinner from './components/Spinner.jsx'
+import ThemeToggle from './components/ThemeToggle';
+import ParticlesBackground from './components/ParticlesBackground';
+import HeroCards from './components/HeroCards';
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
 
@@ -24,6 +28,8 @@ const App = () => {
   const [isLoading, setisLoading] = useState(false);
   const [debounceSearchTerm, setdebounceSearchTerm] = useState('')
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [trendingRank, setTrendingRank] = useState(null);
 
   // debunce search term
   useDebounce(() => {
@@ -84,14 +90,15 @@ const App = () => {
   }, [])
 
   return (
-    <main>
+    <main className="relative min-h-screen overflow-hidden">
 
-      <div className="pattern" />
+      <ParticlesBackground />
 
-      <div className="wrapper">
+      <div className="wrapper relative z-10">
+        <ThemeToggle />
         <header>
-          <img src="./hero.png" alt="Hero Banner" />
-          <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy Without the Hassle</h1>
+          <HeroCards />
+          <h1>Find <span className='text-highlight'>Movies</span> You'll Enjoy Without the Hassle</h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
@@ -101,7 +108,13 @@ const App = () => {
 
             <ul>
               {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
+                <li
+                  key={movie.$id}
+                  onClick={() => {
+                    setSelectedMovie(movie);
+                    setTrendingRank(index + 1);
+                  }}
+                >
                   <p>{index + 1}</p>
                   <img src={movie.poster_url} alt={movie.title} />
                 </li>
@@ -120,12 +133,30 @@ const App = () => {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onClick={(m) => {
+                    setSelectedMovie(m);
+                    setTrendingRank(null);
+                  }}
+                />
               ))}
             </ul>
           )}
         </section>
       </div>
+
+      {selectedMovie && (
+        <MovieDetailModal
+          movie={selectedMovie}
+          onClose={() => {
+            setSelectedMovie(null);
+            setTrendingRank(null);
+          }}
+          trendingRank={trendingRank}
+        />
+      )}
 
     </main>
   )

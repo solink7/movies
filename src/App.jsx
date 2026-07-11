@@ -8,6 +8,7 @@ import ParticlesBackground from './components/ParticlesBackground';
 import HeroCards from './components/HeroCards';
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -158,6 +159,7 @@ const App = () => {
         />
       )}
 
+      <SpeedInsights />
     </main>
   )
 }

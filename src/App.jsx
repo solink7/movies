@@ -8,6 +8,7 @@ import ParticlesBackground from './components/ParticlesBackground';
 import HeroCards from './components/HeroCards';
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
+import { Analytics } from '@vercel/analytics/react'
 
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -91,7 +92,7 @@ const App = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden">
-
+      <Analytics />
       <ParticlesBackground />
 
       <div className="wrapper relative z-10">
